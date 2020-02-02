@@ -1,0 +1,12 @@
+[package]
+name = "tca9535"
+version = "0.1.0"
+authors = ["Zac Berkowitz <zberkowitz@whoi.edu>"]
+edition = "2018"
+
+[dependencies]
+embedded-hal = "^0.2"
+
+[dev-dependencies]
+embedded-hal-mock = "^0.7"
+
