@@ -17,8 +17,8 @@ pub struct Tca9535<T> {
 impl<T,E> Tca9535<T>
 where T: WriteRead<Error = E> + Write<Error = E>
 {
-    pub fn new(_i2c: &T, address: Address) -> Result<Self, E> {
-        Ok(Self{address: address as u8, i2c: PhantomData})
+    pub fn new(_i2c: &T, address: Address) -> Self {
+        Self{address: address as u8, i2c: PhantomData}
     }
 
     pub fn address(&self) -> Address {
