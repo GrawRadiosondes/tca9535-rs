@@ -5,10 +5,9 @@
 // Tests require std for mocking the i2c bus
 #![cfg_attr(not(test), no_std)]
 
-use embedded_hal::blocking::i2c::{Write, WriteRead};
-use core::marker::PhantomData;
 use core::convert::TryFrom;
-
+use core::marker::PhantomData;
+use embedded_hal::blocking::i2c::{Write, WriteRead};
 
 bitflags::bitflags! {
     pub struct Port: u16 {
@@ -36,11 +35,15 @@ pub struct Tca9535<T> {
     i2c: PhantomData<T>,
 }
 
-impl<T,E> Tca9535<T>
-where T: WriteRead<Error = E> + Write<Error = E>
+impl<T, E> Tca9535<T>
+where
+    T: WriteRead<Error = E> + Write<Error = E>,
 {
     pub fn new(_i2c: &T, address: Address) -> Self {
-        Self{address, i2c: PhantomData}
+        Self {
+            address,
+            i2c: PhantomData,
+        }
     }
 
     pub fn address(&self) -> Address {
@@ -57,11 +60,7 @@ where T: WriteRead<Error = E> + Write<Error = E>
     fn read_pair(&self, i2c: &mut T, reg: Register) -> Result<Port, E> {
         let mut buffer = [0u8; 2];
         i2c.write_read(self.address as u8, &[reg as u8], &mut buffer)
-            .map(|_| {
-                unsafe{
-                    Port::from_bits_unchecked(u16::from_le_bytes(buffer))
-                }
-            })
+            .map(|_| unsafe { Port::from_bits_unchecked(u16::from_le_bytes(buffer)) })
     }
 
     /// Write a pair of registers.
@@ -180,19 +179,18 @@ pub enum Register {
 
 #[cfg(test)]
 mod tests {
-    use embedded_hal_mock::i2c::{
-        Mock,
-        Transaction,
-    };
     use super::*;
+    use embedded_hal_mock::i2c::{Mock, Transaction};
 
     #[test]
     fn test_read_inputs() {
         let addr = Address::ADDR_0x24;
-        let expected_value = Port::P00| Port::P14;
-        let expected = [
-            Transaction::write_read(addr as u8, vec![Register::INPUT_PORT0 as u8], expected_value.bits.to_le_bytes().to_vec())
-        ];
+        let expected_value = Port::P00 | Port::P14;
+        let expected = [Transaction::write_read(
+            addr as u8,
+            vec![Register::INPUT_PORT0 as u8],
+            expected_value.bits.to_le_bytes().to_vec(),
+        )];
 
         let mut i2c = Mock::new(&expected);
         let device = Tca9535::new(&i2c, addr);
@@ -204,9 +202,11 @@ mod tests {
     fn test_read_empty() {
         let addr = Address::ADDR_0x24;
         let raw_response_value = vec![0, 0];
-        let expected = [
-            Transaction::write_read(addr as u8, vec![Register::INPUT_PORT0 as u8], raw_response_value),
-        ];
+        let expected = [Transaction::write_read(
+            addr as u8,
+            vec![Register::INPUT_PORT0 as u8],
+            raw_response_value,
+        )];
         let expected_result = Port::empty();
 
         let mut i2c = Mock::new(&expected);
@@ -219,10 +219,19 @@ mod tests {
     fn test_read_outputs() {
         let addr = Address::ADDR_0x22;
         let raw_response_value = vec![0xAA, 0x55];
-        let expected = [
-            Transaction::write_read(addr as u8, vec![Register::OUTPUT_PORT0 as u8], raw_response_value),
-        ];
-        let expected_result = Port::P01 | Port::P03 | Port::P05 | Port::P07 | Port::P10 | Port::P12 | Port::P14 | Port::P16;
+        let expected = [Transaction::write_read(
+            addr as u8,
+            vec![Register::OUTPUT_PORT0 as u8],
+            raw_response_value,
+        )];
+        let expected_result = Port::P01
+            | Port::P03
+            | Port::P05
+            | Port::P07
+            | Port::P10
+            | Port::P12
+            | Port::P14
+            | Port::P16;
 
         let mut i2c = Mock::new(&expected);
         let device = Tca9535::new(&i2c, addr);
