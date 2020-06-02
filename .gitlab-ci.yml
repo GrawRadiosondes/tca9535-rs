@@ -1,0 +1,45 @@
+image: "rust:latest"
+variables:
+  CARGO_HOME: $CI_PROJECT_DIR/.cargo
+
+stages:
+  - fmt
+  - build
+  - test
+
+build:
+  stage: build
+  script:
+    - rustc --version && cargo --version
+    - cargo build
+  cache:
+    paths:
+      - .cargo
+
+test:
+  stage: test
+  script:
+    - rustc --version && cargo --version
+    - cargo test
+  cache:
+    paths:
+      - .cargo
+
+check-fmt:
+  stage: fmt
+  script:
+    - rustup component add rustfmt
+    - rustc --version && cargo --version
+    - cargo fmt -- --check
+  cache:
+    paths:
+      - .cargo
+
+check-clippy:
+  script:
+    - rustup component add clippy
+    - rustc --version && cargo --version
+    - cargo clippy --color=always -- -D warnings
+  cache:
+    paths:
+      - .cargo

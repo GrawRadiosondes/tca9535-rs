@@ -4,7 +4,6 @@ version = "0.1.0"
 authors = ["Zac Berkowitz <zberkowitz@whoi.edu>"]
 edition = "2018"
 license = "BSD-2-Clause"
-license-file = "LICENSE"
 repository = "https://gitlab.com/berkowski/tca9535-rs"
 keywords = ["embedded-hal-driver", "i2c", "gpio"]
 categories = ["embedded", "hardware-support", "no-std"]
