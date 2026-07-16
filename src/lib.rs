@@ -10,6 +10,7 @@ use core::marker::PhantomData;
 use embedded_hal::i2c::I2c;
 
 bitflags::bitflags! {
+    #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
     pub struct Port: u16 {
         const P00 = 0b0000_0000_0000_0001;
         const P01 = 0b0000_0000_0000_0010;
@@ -60,7 +61,7 @@ where
     fn read_pair(&self, i2c: &mut T, reg: Register) -> Result<Port, E> {
         let mut buffer = [0u8; 2];
         i2c.write_read(self.address as u8, &[reg as u8], &mut buffer)
-            .map(|_| unsafe { Port::from_bits_unchecked(u16::from_le_bytes(buffer)) })
+            .map(|_|  Port::from_bits(u16::from_le_bytes(buffer)).unwrap() )
     }
 
     /// Write a pair of registers.
@@ -71,7 +72,7 @@ where
     /// Intended to be called only using the Port 0 registers and will automatically
     /// write to the matching the Port 1 register
     fn write_pair(&self, i2c: &mut T, reg: Register, port: Port) -> Result<(), E> {
-        let bytes = port.bits.to_le_bytes();
+        let bytes = port.bits().to_le_bytes();
         let buffer = [reg as u8, bytes[0], bytes[1]];
         i2c.write(self.address as u8, &buffer)
     }
@@ -189,7 +190,7 @@ mod tests {
         let expected = [Transaction::write_read(
             addr as u8,
             vec![Register::INPUT_PORT0 as u8],
-            expected_value.bits.to_le_bytes().to_vec(),
+            expected_value.bits().to_le_bytes().to_vec(),
         )];
 
         let mut i2c = Mock::new(&expected);
