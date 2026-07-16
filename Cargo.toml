@@ -1,14 +1,14 @@
 [package]
 name = "tca9535"
 version = "0.1.0"
-authors = ["Zac Berkowitz <zberkowitz@whoi.edu>"]
+authors = ["Arno Daeuper <arno.dauuper@graw.de>"]
 edition = "2018"
 license = "BSD-2-Clause"
-repository = "https://gitlab.com/berkowski/tca9535-rs"
+repository = "https://github.com/GrawRadiosondes/tca9535-rs"
 keywords = ["embedded-hal-driver", "i2c", "gpio"]
 categories = ["embedded", "hardware-support", "no-std"]
 readme = "README.md"
-description = "embedded-hal driver for the TCA9535 port expander"
+description = "embedded-hal 1.0 driver for the TCA9535 port expander"
 
 [dependencies]
 embedded-hal = "1.0.0"
