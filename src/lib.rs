@@ -37,8 +37,7 @@ pub struct Tca9535<T> {
 
 impl<T, E> Tca9535<T>
 where
-    T:I2c<Error = E>
-
+    T: I2c<Error = E>,
 {
     pub fn new(_i2c: &T, address: Address) -> Self {
         Self {
