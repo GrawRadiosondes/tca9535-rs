@@ -1,5 +1,9 @@
 # TCA9535 I/O Expander embedded-hal i2c driver
 
+Original from https://gitlab.com/berkowski/tca9535-rs
+
+Modified to be used with embedded-hal 1.0
+
 From the [datasheet](https://www.ti.com/lit/ds/symlink/tca9535.pdf): 
 
 The TCA9535is a 24-pin device that provides 16 bits of general purpose
