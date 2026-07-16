@@ -1,7 +1,11 @@
 [package]
 name = "tca9535"
-version = "0.1.0"
-authors = ["Arno Daeuper <arno.dauuper@graw.de>"]
+version = "0.2.0"
+authors = [
+  "Zac Berkowitz <zberkowitz@whoi.edu>",
+  "Arno Daeuper <arno.dauuper@graw.de>",
+  "Niklas Wildenburg <niklas.wildenburg@graw.de>
+]
 edition = "2018"
 license = "BSD-2-Clause"
 repository = "https://github.com/GrawRadiosondes/tca9535-rs"
@@ -16,4 +20,3 @@ bitflags = "1.2"
 
 [dev-dependencies]
 embedded-hal-mock = "0.11.1"
-
