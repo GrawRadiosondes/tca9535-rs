@@ -11,9 +11,9 @@ readme = "README.md"
 description = "embedded-hal driver for the TCA9535 port expander"
 
 [dependencies]
-embedded-hal = "^0.2"
+embedded-hal = "1.0.0"
 bitflags = "1.2"
 
 [dev-dependencies]
-embedded-hal-mock = "^0.7"
+embedded-hal-mock = "0.11.1"
 

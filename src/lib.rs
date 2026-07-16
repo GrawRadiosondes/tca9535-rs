@@ -7,7 +7,7 @@
 
 use core::convert::TryFrom;
 use core::marker::PhantomData;
-use embedded_hal::blocking::i2c::{Write, WriteRead};
+use embedded_hal::i2c::I2c;
 
 bitflags::bitflags! {
     pub struct Port: u16 {
@@ -37,7 +37,8 @@ pub struct Tca9535<T> {
 
 impl<T, E> Tca9535<T>
 where
-    T: WriteRead<Error = E> + Write<Error = E>,
+    T:I2c<Error = E>
+
 {
     pub fn new(_i2c: &T, address: Address) -> Self {
         Self {
@@ -180,7 +181,7 @@ pub enum Register {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use embedded_hal_mock::i2c::{Mock, Transaction};
+    use embedded_hal_mock::eh1::i2c::{Mock, Transaction};
 
     #[test]
     fn test_read_inputs() {
@@ -195,6 +196,7 @@ mod tests {
         let mut i2c = Mock::new(&expected);
         let device = Tca9535::new(&i2c, addr);
         let result = device.read_inputs(&mut i2c).unwrap();
+        i2c.done();
         assert_eq!(result, expected_value);
     }
 
@@ -212,6 +214,7 @@ mod tests {
         let mut i2c = Mock::new(&expected);
         let device = Tca9535::new(&i2c, addr);
         let result = device.read_inputs(&mut i2c).unwrap();
+        i2c.done();
         assert_eq!(result, expected_result);
     }
 
@@ -236,6 +239,7 @@ mod tests {
         let mut i2c = Mock::new(&expected);
         let device = Tca9535::new(&i2c, addr);
         let result = device.read_outputs(&mut i2c).unwrap();
+        i2c.done();
         assert_eq!(result, expected_result);
     }
 }
