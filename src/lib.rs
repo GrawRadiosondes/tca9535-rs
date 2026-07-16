@@ -61,7 +61,7 @@ where
     fn read_pair(&self, i2c: &mut T, reg: Register) -> Result<Port, E> {
         let mut buffer = [0u8; 2];
         i2c.write_read(self.address as u8, &[reg as u8], &mut buffer)
-            .map(|_|  Port::from_bits(u16::from_le_bytes(buffer)).unwrap() )
+            .map(|_| Port::from_bits(u16::from_le_bytes(buffer)).unwrap())
     }
 
     /// Write a pair of registers.
